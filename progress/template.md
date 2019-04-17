@@ -1,7 +1,7 @@
-## Project 6: <Robot Intention Communication>
+## Project 6: Robot Intention Communication
 Date: 29.04.2019
 
-<Priteshkumar Gohil>:
+Priteshkumar Gohil:
 
    * What did I do last week?
    * What will I do in the following week?
