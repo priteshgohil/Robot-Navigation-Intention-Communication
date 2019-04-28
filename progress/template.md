@@ -7,12 +7,13 @@ Priteshkumar Gohil:
    * Following week, my plan is to work on parsing message received on serial port and execute a command based on the request.
    * No this week I don't see anything that can prevent mer to achieve my sprint goal.
 
-<Name>:
+Eduardo Cervantes:
 
-   * What did I do last week?
-   * What will I do in the following week?
-   * Do I have any problems which will prevent me from reaching our sprint goal? If yes, what?
-
+   * Last week I was learning the basic commands used by Adafruit CircuitPlayground to interact with the internal components (NeoLeds,  Buzer, Buttons, Accelerometer, etc.). Additionally, I developed an initial sketch of basic communication between our board and Python.
+   
+   * Going from simple parsing to implement a more robust method into our board
+    
+   * Until now, I haven't detect any possible problem.
 
 <Name>:
 
