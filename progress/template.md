@@ -14,4 +14,3 @@ Eduardo Cervantes:
    * Going from simple parsing to implement a more robust method into our board
     
    * Until now, I haven't detect any possible problem.
-
