@@ -15,8 +15,3 @@ Eduardo Cervantes:
     
    * Until now, I haven't detect any possible problem.
 
-<Name>:
-
-   * What did I do last week?
-   * What will I do in the following week?
-   * Do I have any problems which will prevent me from reaching our sprint goal? If yes, what?
