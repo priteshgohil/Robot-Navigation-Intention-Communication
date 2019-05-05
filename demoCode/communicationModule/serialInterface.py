@@ -3,15 +3,15 @@ import serial
 from time import sleep, time
 
 # declare to variables, holding the com port we wish to talk to and the speed
-port = '/dev/ttyACM1'
+port = '/dev/ttyACM0'
 baud = 9600
 lastime = 0
 timeout = 1 # 30 seconds timeout
 
 dictionary = {
-    "straight": "<RIC##LED:00F0:FF0000;PAT:1000;BUZ:2000;50;2001#RIC>",
-    "right": "<RIC##LED:001F:00FF00;PAT:1001;BUZ:2000;50;2002#RIC>",
-    "left": "<RIC##LED:02E0:0000FF;PAT:1002;BUZ:2000;50;2003#RIC>"
+    "straight": "<RIC##LED:0387:FF0000;PAT:1000;BUZ:2000;50;2001#RIC>",
+    "right": "<RIC##LED:03E0:00FF00;PAT:1001;BUZ:2000;50;2002#RIC>",
+    "left": "<RIC##LED:001F:0000FF;PAT:1002;BUZ:2000;50;2003#RIC>"
 }
 
 #Opening of the serial port
@@ -34,16 +34,17 @@ while True:
     value = int(input("Write your command here: "))
     if value == 1:
         command = 'straight'
-        arduino.write(dictionary[command])
+        arduino.write(dictionary[command].encode())
     elif value == 2:
         command = 'right'
-        arduino.write(dictionary[command])
+        arduino.write(dictionary[command].encode())
     elif value == 3:
         command = 'left'
-        arduino.write(dictionary[command])
+        arduino.write(dictionary[command].encode())
     elif value == 4: 
         print("See you again")
         break
     else:
         print(value)
         print("you did not enter correct choice:")
+
