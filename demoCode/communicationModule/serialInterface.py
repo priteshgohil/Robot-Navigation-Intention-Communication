@@ -29,7 +29,6 @@ try:
     arduino = serial.Serial(port,baud,timeout=1)
 except:
     print('Please check the port')
-
 #Initialising variables
 serial.Serial()
 rawdata=[]
