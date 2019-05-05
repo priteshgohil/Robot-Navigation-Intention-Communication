@@ -1,3 +1,22 @@
+/*
+  RobotIntentionCommunication
+
+  This program receives the serial input from the robot with predefined message frame.
+  Module:
+  1. Read the data from serial port and store it as a string: isDataAvailable();
+  2. Parse the received message and store it in the structure: parseMessage();
+  3. Check for the pattern received, and perform relavent action from data: executeAction();
+
+  Created: 15 April 2019
+  By: Pritesh Gohil and Eduardo Cervantes
+  Modified: 05 May 2019
+  By: Pritesh Gohil and Eduardo Cervantes
+
+  References: 
+  https://www.codingame.com/playgrounds/14213/how-to-play-with-strings-in-c/string-split
+
+*/
+
 #include <Adafruit_CircuitPlayground.h>
 //#include "Message.h"
 #define BAUD_RATE 9600
@@ -123,7 +142,7 @@ void Parse_Message(){
 
 void Execute_Action(){
   if(UARTmsg.unBlink_Pattern == 0x1000){
-    blickGeneral(UARTmsg.unLed_Number,UARTmsg.unLed_Colour);
+    movingRight(UARTmsg.unLed_Number,UARTmsg.unLed_Colour);
   }
   else if(UARTmsg.unBlink_Pattern == 0x1001){
     blickGeneral(UARTmsg.unLed_Number,UARTmsg.unLed_Colour);
@@ -158,4 +177,28 @@ void forwardMove() {
   CircuitPlayground.setPixelColor(5,0,GREEN,0);  //green
 //  speakerTone();
   DELAY_300MS;
+}
+
+void movingRight(uint16_t LedNumber, uint32_t colour){
+  bool pixel1 = 0, pixel2 = 0;
+  uint8_t cutIndex = 5;
+  const uint16_t rightMask = 0x001F;
+  const uint16_t leftMask = 0x03E0;
+  uint16_t led5to9 = (LedNumber & leftMask)>>cutIndex; 
+  uint16_t led0to4 = (LedNumber & rightMask)<<3; 
+
+  CircuitPlayground.clearPixels();              //clear all the LED pixels
+  delay(150);
+  for (int i = 0, j=cutIndex-1; i<cutIndex; i++,j--){
+    pixel1 = (led0to4 << i) & 0x80;       //checking LED number form position 4 onwards , 3,2,1,0
+    pixel2 = (led5to9 >> i) & 1;          //checking LED number from poition 5 onwards ,6,7,8,9
+
+    if(pixel1){
+      CircuitPlayground.setPixelColor(i+cutIndex,colour);     //i+curIndex, because actual index is 0+5 (remember that data is shifted to LSB)
+    }
+    if(pixel2){
+      CircuitPlayground.setPixelColor(j,colour);
+    }
+    delay(300);
+  }
 }
