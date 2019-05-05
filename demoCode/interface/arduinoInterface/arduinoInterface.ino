@@ -148,14 +148,15 @@ void blickGeneral(uint16_t LedNumber, uint32_t colour){
 }
 
 void forwardMove() {
-  CircuitPlayground.setPixelColor(2,0,GREEN,0);  //green
-  CircuitPlayground.setPixelColor(7,0,GREEN,0);  //green
+  // Color now comes from the message sent from python 
+  CircuitPlayground.setPixelColor(2,UARTmsg.unLed_Colour);  
+  CircuitPlayground.setPixelColor(7,UARTmsg.unLed_Colour); 
   DELAY_300MS;
-  CircuitPlayground.setPixelColor(3,0,GREEN,0);  //green
-  CircuitPlayground.setPixelColor(6,0,GREEN,0);  //green
+  CircuitPlayground.setPixelColor(3,UARTmsg.unLed_Colour); 
+  CircuitPlayground.setPixelColor(6,UARTmsg.unLed_Colour);  
   DELAY_300MS;
-  CircuitPlayground.setPixelColor(4,0,GREEN,0);  //green
-  CircuitPlayground.setPixelColor(5,0,GREEN,0);  //green
+  CircuitPlayground.setPixelColor(4,UARTmsg.unLed_Colour);  
+  CircuitPlayground.setPixelColor(5,UARTmsg.unLed_Colour);  
 //  speakerTone();
   DELAY_300MS;
 }

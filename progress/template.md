@@ -26,8 +26,6 @@ Priteshkumar Gohil:
 
 Eduardo Cervantes:
 
-   * 
-   
-   * 
-    
-   * 
+   * The communication with the Circuit Playground pid=219A is now made automatically. Additionaly the color now comes from the message sent by our interface
+   * Start to implement the different methods supported by Ropod. 
+   * Depending on the amount of boards to be implemented on the robopod the automatic connection shall follow a different method. Which represent more time.
