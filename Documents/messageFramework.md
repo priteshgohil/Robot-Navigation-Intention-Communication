@@ -5,15 +5,35 @@ which allows us to parse the data in an easy way in our Circuit Playground
 
 
 
-<RIC##LED:0387:FFFF00;PAT:1000;BUZ:2000;50;2001#RIC>
+<RIC##LED:0387:FFFF00;PAT:1000;BUZ:2000:50:2001#RIC>
 
 <RIC##: Represent the init of our string
+
  RIC>:  Represent the end of our string
 
-The data contained in the string can be visualzied in the next table
+Each input parameter is separated by semi colon
+* LED:0387:FFFF00;
 
-LED         :XXXX  Material      Color
------------ -----  ------------  ------------
-LED command desired led  leather       brown
+  ** LED: Word to identify parameters ralated to LEDs
+  
+  ** XXXX: Hexadecimal representation of the desired leds to be turned on
+  
+  ** XXXXXX; Hexadecimal representation of the desired colour being RRGGBB
+             Red, Green, Blue
 
-Table: Shoes sizes, materials, and colors.
+* PAT:1000
+
+  ** PAT: Word to identify parameters ralated to Pattern
+ 
+  ** XXXX; Desired pattern to be executed by the Circuit Playground. Example: all leds blinking, sspecified sequence, gradient of colors
+
+
+* BUZ:2000:50:2001
+
+  ** BUZ: Word to identify parameters ralated to Buzzer
+ 
+  ** XXXX: Time in miliseconds
+ 
+  ** XX: Desired frequency
+ 
+  ** XXXX; 
