@@ -24,10 +24,6 @@
 #define RED 255 
 #define BLUE 255 
 #define GREEN 255 
-#define DELAY_1S 1000
-#define DELAY_500MS 500
-#define DELAY_300MS delay(300)
-#define DELAY_200MS delay(200)
 
 typedef struct{
     uint16_t unLed_Number;
@@ -60,12 +56,12 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
- Is_data_available();
- Parse_Message();
- Execute_Action();
+ isDataAvailable();
+ parseMessage();
+ executeAction();
 }
 
-void Is_data_available() {
+void isDataAvailable() {
  static uint8_t index = 0;
  char endline = '>';
  char rxChar;
@@ -93,7 +89,7 @@ void Is_data_available() {
      }
  }
 
-void Parse_Message(){
+void parseMessage(){
   if(UARTmsg.bnewData){
     Serial.println("parse");
     char delim[] = "#;:";
@@ -140,9 +136,9 @@ void Parse_Message(){
 }
 
 
-void Execute_Action(){
+void executeAction(){
   if(UARTmsg.unBlink_Pattern == 0x1000){
-    movingRight(UARTmsg.unLed_Number,UARTmsg.unLed_Colour);
+    movingStraight(UARTmsg.unLed_Number,UARTmsg.unLed_Colour);
   }
   else if(UARTmsg.unBlink_Pattern == 0x1001){
     blickGeneral(UARTmsg.unLed_Number,UARTmsg.unLed_Colour);
@@ -163,7 +159,7 @@ void blickGeneral(uint16_t LedNumber, uint32_t colour){
       CircuitPlayground.setPixelColor(i,colour);
     }
   }
-  DELAY_300MS;
+  delay(300);
 }
 
 
@@ -171,17 +167,17 @@ void forwardMove() {
   // Color now comes from the message sent from python 
   CircuitPlayground.setPixelColor(2,UARTmsg.unLed_Colour);  
   CircuitPlayground.setPixelColor(7,UARTmsg.unLed_Colour); 
-  DELAY_300MS;
+  delay(300);
   CircuitPlayground.setPixelColor(3,UARTmsg.unLed_Colour); 
   CircuitPlayground.setPixelColor(6,UARTmsg.unLed_Colour);  
-  DELAY_300MS;
+  delay(300);
   CircuitPlayground.setPixelColor(4,UARTmsg.unLed_Colour);  
   CircuitPlayground.setPixelColor(5,UARTmsg.unLed_Colour);  
 //  speakerTone();
-  DELAY_300MS;
+  delay(300);
 }
 
-void movingRight(uint16_t LedNumber, uint32_t colour){
+void movingStraight(uint16_t LedNumber, uint32_t colour){
   bool pixel1 = 0, pixel2 = 0;
   uint8_t cutIndex = 5;
   const uint16_t rightMask = 0x001F;
@@ -204,4 +200,3 @@ void movingRight(uint16_t LedNumber, uint32_t colour){
     delay(300);
   }
 }
-
