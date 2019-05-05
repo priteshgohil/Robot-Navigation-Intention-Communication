@@ -14,3 +14,20 @@ Eduardo Cervantes:
    * Going from simple parsing to implement a more robust method into our board
     
    * Until now, I haven't detect any possible problem.
+
+
+Date: 06.05.2019
+
+Priteshkumar Gohil:
+
+   * Added a code to decode the LED number from message format and blink respective LED.
+   * Added a code to decode the LED blinking pattern from message format and blink LED according to action (pattern code) performed by the robot.
+   * Refactoring the code to follow certain naming convention.
+
+Eduardo Cervantes:
+
+   * 
+   
+   * 
+    
+   * 

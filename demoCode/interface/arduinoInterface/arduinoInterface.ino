@@ -18,6 +18,7 @@ typedef struct{
     uint8_t unBuzz_time;
     uint16_t unBuzz_Pattern;
     bool bnewData;
+    bool bDataAvailable;
     uint8_t unRxSize;
 }stMessage;
 
@@ -40,8 +41,6 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  CircuitPlayground.clearPixels();              //clear all the LED pixels
-  delay(500);
  Is_data_available();
  Parse_Message();
  Execute_Action();
@@ -117,18 +116,35 @@ void Parse_Message(){
       ptr = strtok(NULL, delim);
       }
       UARTmsg.bnewData = false;
+      UARTmsg.bDataAvailable = true;
     }
 }
 
 
 void Execute_Action(){
-//  forwardMove();
-  if(UARTmsg.unLed_Number==240){
-    forwardMove();
+  if(UARTmsg.unBlink_Pattern == 0x1000){
+    blickGeneral(UARTmsg.unLed_Number,UARTmsg.unLed_Colour);
   }
-  if(UARTmsg.unLed_Number==31){
-    CircuitPlayground.clearPixels(); 
+  else if(UARTmsg.unBlink_Pattern == 0x1001){
+    blickGeneral(UARTmsg.unLed_Number,UARTmsg.unLed_Colour);
   }
+  else if(UARTmsg.unBlink_Pattern == 0x1002){
+    blickGeneral(UARTmsg.unLed_Number,UARTmsg.unLed_Colour);
+  }
+}
+
+
+void blickGeneral(uint16_t LedNumber, uint32_t colour){
+  CircuitPlayground.clearPixels();              //clear all the LED pixels
+  delay(300);
+  bool singleBit = 0;
+  for (int i = 0; i<10; i++){
+    singleBit = (LedNumber >> i) & 1;
+    if (singleBit){
+      CircuitPlayground.setPixelColor(i,colour);
+    }
+  }
+  DELAY_300MS;
 }
 
 void forwardMove() {
@@ -143,4 +159,3 @@ void forwardMove() {
 //  speakerTone();
   DELAY_300MS;
 }
-//ref https://www.codingame.com/playgrounds/14213/how-to-play-with-strings-in-c/string-split
