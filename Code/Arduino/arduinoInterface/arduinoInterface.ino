@@ -148,6 +148,7 @@ void executeAction(){
   }
   else if(UARTmsg.unBlink_Pattern == 0x1003){
     blickGeneral(UARTmsg.unLed_Number,UARTmsg.unLed_Colour);
+    Buzzer(UARTmsg.unBuzz_time,UARTmsg.unBuzz_Freq);
   }
 }
 
@@ -165,20 +166,6 @@ void blickGeneral(uint16_t LedNumber, uint32_t colour){
   delay(300);
 }
 
-
-void forwardMove() {
-  // Color now comes from the message sent from python 
-  CircuitPlayground.setPixelColor(2,UARTmsg.unLed_Colour);  
-  CircuitPlayground.setPixelColor(7,UARTmsg.unLed_Colour); 
-  delay(300);
-  CircuitPlayground.setPixelColor(3,UARTmsg.unLed_Colour); 
-  CircuitPlayground.setPixelColor(6,UARTmsg.unLed_Colour);  
-  delay(300);
-  CircuitPlayground.setPixelColor(4,UARTmsg.unLed_Colour);  
-  CircuitPlayground.setPixelColor(5,UARTmsg.unLed_Colour);  
-//  speakerTone();
-  delay(300);
-}
 
 void movingStraight(uint16_t LedNumber, uint32_t colour){
   bool pixel1 = 0, pixel2 = 0;
@@ -227,3 +214,8 @@ void movingReverse(uint16_t LedNumber, uint32_t colour){
     delay(300);
   }
 }
+
+void Buzzer(uint16_t Buzz_Freq, uint8_t Buzz_time)
+{
+  CircuitPlayground.playTone(Buzz_time,Buzz_Freq)
+  }
