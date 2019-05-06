@@ -19,9 +19,11 @@ lastime = 0
 timeout = 1 # 30 seconds timeout
 
 dictionary = {
-    "straight": "<RIC##LED:0387:FFFF00;PAT:1000;BUZ:2000;50;2001#RIC>",
-    "right": "<RIC##LED:03E0:00FF00;PAT:1001;BUZ:2000;50;2002#RIC>",
-    "left": "<RIC##LED:001F:0000FF;PAT:1002;BUZ:2000;50;2003#RIC>"
+    "straight": "<RIC##LED:0387:FFFFFF;PAT:1000;BUZ:2000;50;2001#RIC>",
+    "reverse": "<RIC##LED:00FC:00EE00;PAT:1001;BUZ:2000;50;2003#RIC>",
+    "right": "<RIC##LED:03E0:00FF00;PAT:1002;BUZ:2000;50;2002#RIC>",
+    "left": "<RIC##LED:001F:00EEFF;PAT:1003;BUZ:2000;50;2003#RIC>"
+
 }
 
 #Opening of the serial port
@@ -36,21 +38,25 @@ count=0
 
 print("Enter following command for to see the robot actions:")
 print("1: going straight")
-print("2: going right")
-print("3: going left")
-print("4: exit")  #Exit command is only for demo
+print("2: going reverse")
+print("3: going right")
+print("4: going left")
+print("5: exit")  #Exit command is only for demo
 while True:
     value = int(input("Write your command here: "))
     if value == 1:
         command = 'straight'
         arduino.write(dictionary[command].encode())
     elif value == 2:
-        command = 'right'
+        command = 'reverse'
         arduino.write(dictionary[command].encode())
     elif value == 3:
-        command = 'left'
+        command = 'right'
         arduino.write(dictionary[command].encode())
     elif value == 4:
+        command = 'left'
+        arduino.write(dictionary[command].encode())
+    elif value == 5:
         print("See you again")
         break
     else:
