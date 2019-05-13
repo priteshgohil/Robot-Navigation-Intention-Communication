@@ -29,3 +29,14 @@ Eduardo Cervantes:
    * The communication with the Circuit Playground pid=219A is now made automatically. Additionaly the color now comes from the message sent by our interface
    * Start to implement the different methods supported by Ropod. 
    * Depending on the amount of boards to be implemented on the robopod the automatic connection shall follow a different method. Which represent more time.
+
+
+
+Date: 13.05.2019
+
+Priteshkumar Gohil and Eduardo Cervantes:
+
+* Last week we did pair programming in lab class and finished our weekly task.
+* The weekly task was to refactor the code.
+* Created a package of playground interface python file so that we can import the package while working with ROS.
+* Created a simple test case with ROS package. For example, create a publisher which publish our message frame. Creat subscriber, which receives the message published by publisher, then import playground interface python package and send message framework to the arduino.
