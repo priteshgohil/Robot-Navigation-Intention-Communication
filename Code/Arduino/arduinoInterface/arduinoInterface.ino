@@ -217,5 +217,5 @@ void movingReverse(uint16_t LedNumber, uint32_t colour){
 
 void Buzzer(uint16_t Buzz_Freq, uint8_t Buzz_time)
 {
-  CircuitPlayground.playTone(Buzz_time,Buzz_Freq)
+  CircuitPlayground.playTone(Buzz_time,Buzz_Freq);
   }
