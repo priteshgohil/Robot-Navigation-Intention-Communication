@@ -40,3 +40,11 @@ Priteshkumar Gohil and Eduardo Cervantes:
 * The weekly task was to refactor the code.
 * Created a package of playground interface python file so that we can import the package while working with ROS.
 * Created a simple test case with ROS package. For example, create a publisher which publish our message frame. Creat subscriber, which receives the message published by publisher, then import playground interface python package and send message framework to the arduino.
+
+
+Date: 20.05.2019
+
+Priteshkumar Gohil and Eduardo Cervantes:
+
+* Last week we did integration test with the ROPOD and our demo code was successfully working.
+* We also started looking into ROPOD maneuver navigation and planner code to get access of the publishing messages. 
