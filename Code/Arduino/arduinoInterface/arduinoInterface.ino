@@ -41,23 +41,24 @@ stMessage UARTmsg;
 const byte numChars = 100;
 char receivedChars[numChars]; // an array to store the received data
 bool execute = false;
-char data_1[32]={0};
-char data_2[32]={0};
 char cRxMsg[RX_MSG_SIZE];
-//char delim[] = "#;:";
-int data_3=0;
 
 void setup() {
   // put your setup code here, to run once:
  CircuitPlayground.begin();
+ //Initialize the UART port
  Serial.begin(BAUD_RATE);
  Serial.println("<Arduino is ready>");
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
+  //chekc if data from UART is available
  isDataAvailable();
- parseMessage();
+ //if data is available then parse the received message
+ if(UARTmsg.bnewData){
+  parseMessage();
+ }
  executeAction();
 }
 
@@ -90,7 +91,6 @@ void isDataAvailable() {
  }
 
 void parseMessage(){
-  if(UARTmsg.bnewData){
     Serial.println("parse");
     char delim[] = "#;:";
     char *ptr = strtok(cRxMsg, delim);
@@ -105,7 +105,6 @@ void parseMessage(){
       else{
   //      strcpy(msg, ptr);
         if(strcmp(ptr,"LED")==0){
-  //        strcpy(packet1,ptr);
           ptr = strtok(NULL, delim); //get LED numbers
           UARTmsg.unLed_Number = strtol(ptr, NULL, 16);
           Serial.println(ptr);
@@ -114,12 +113,10 @@ void parseMessage(){
           Serial.println(ptr);
         }
         else if(strcmp(ptr,"PAT")==0){
-  //        strcpy(packet2,ptr);
           ptr = strtok(NULL, delim); //get LED blinking pattern
           UARTmsg.unBlink_Pattern = strtol(ptr, NULL, 16);
         }
         else if(strcmp(ptr,"BUZ")==0){
-  //        strcpy(packet3,ptr);
           ptr = strtok(NULL, delim); //get Buzzer frequency
           UARTmsg.unBuzz_Freq = strtol(ptr, NULL, 16);
           ptr = strtok(NULL, delim); //get Buzz time
@@ -132,7 +129,6 @@ void parseMessage(){
       }
       UARTmsg.bnewData = false;
       UARTmsg.bDataAvailable = true;
-    }
 }
 
 
@@ -167,19 +163,22 @@ void blickGeneral(uint16_t LedNumber, uint32_t colour){
 }
 
 
+//LedNumber = 0,0,0,0,0,0,L9,L8,L7,L6,L5,L4,L3,L2,L1,L0 = 0x03FF h
+
 void movingStraight(uint16_t LedNumber, uint32_t colour){
   bool pixel1 = 0, pixel2 = 0;
-  uint8_t cutIndex = 5;
-  const uint16_t rightMask = 0x001F;
-  const uint16_t leftMask = 0x03E0;
-  uint16_t led5to9 = (LedNumber & leftMask)>>cutIndex; 
-  uint16_t led0to4 = (LedNumber & rightMask)<<3; 
+  uint8_t cutIndex = 5;                   //dividing LED's into group of 2. 1st: 0 to 4 and 2md: 5 to 9
+  const uint16_t rightMask = 0x001F;      //Right half of the LEDs are 0 to 4. and its first 5 LSB of LED number so mask is 0x001F
+  const uint16_t leftMask = 0x03E0;       //Left half of the LEDs are 5 to 9. and its next 5 LSB of LED number so mask is 0x03E0
+  uint16_t led5to9 = (LedNumber & leftMask)>>cutIndex;    //bcz our LED pattern is mid highest to lowest(i.e. first blink LED 2-7 -> 1-6 ->0-5), 
+                                                          //we are moving LED 5 to 9 to LSB position, and perform shift right operation to get highest number of LED first
+  uint16_t led0to4 = (LedNumber & rightMask)<<3;          //we are moving LED 0 to 4 to MSB position, and perform shift left operation to get highest number of LED first
 
   CircuitPlayground.clearPixels();              //clear all the LED pixels
   delay(150);
   for (int i = 0, j=cutIndex-1; i<cutIndex; i++,j--){
-    pixel1 = (led0to4 << i) & 0x80;       //checking LED number form position 4 onwards , 3,2,1,0
-    pixel2 = (led5to9 >> i) & 1;          //checking LED number from poition 5 onwards ,6,7,8,9
+    pixel1 = (led0to4 << i) & 0x80;       //converting our data to uint8_t, checking LED number form position 4 onwards , 3,2,1,0. Check if it is true or not by 0x10000000 (because LED at MSB position)
+    pixel2 = (led5to9 >> i) & 1;          //checking LED number from poition 5 onwards ,6,7,8,9. Check if it is true or not by 0x00000001 (because LED at LSB position)
 
     if(pixel1){
       CircuitPlayground.setPixelColor(i+cutIndex,colour);     //i+curIndex, because actual index is 0+5 (remember that data is shifted to LSB)
@@ -199,10 +198,10 @@ void movingReverse(uint16_t LedNumber, uint32_t colour){
   uint16_t led5to9 = (LedNumber & leftMask)>>2; 
   uint16_t led0to4 = (LedNumber & rightMask); 
 
-  CircuitPlayground.clearPixels();              //clear all the LED pixels
+  CircuitPlayground.clearPixels();           //clear all the LED pixels
   delay(150);
   for (int i = 0, j=cutIndex-1; i<cutIndex; i++,j--){
-    pixel1 = (led0to4 >> i) & 1;       //checking LED number form position 4 onwards , 3,2,1,0
+    pixel1 = (led0to4 >> i) & 1;             //checking LED number form position 4 onwards , 3,2,1,0
     pixel2 = (led5to9 << i) & 0x80;          //checking LED number from poition 5 onwards ,6,7,8,9
 
     if(pixel1){
