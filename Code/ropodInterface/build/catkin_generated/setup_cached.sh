@@ -9,6 +9,7 @@
 # modified environment variables
 export CMAKE_PREFIX_PATH="/home/pritesh/Desktop/sem2/sdp/sdp_ss2019_P6_IntentionComm/Code/ropodInterface/devel:$CMAKE_PREFIX_PATH"
 export LD_LIBRARY_PATH="/home/pritesh/Desktop/sem2/sdp/sdp_ss2019_P6_IntentionComm/Code/ropodInterface/devel/lib:$LD_LIBRARY_PATH"
+export PATH="/opt/ros/kinetic/bin:/home/pritesh/anaconda3/bin:/home/pritesh/anaconda3/bin:/home/pritesh/bin:/home/pritesh/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
 export PKG_CONFIG_PATH="/home/pritesh/Desktop/sem2/sdp/sdp_ss2019_P6_IntentionComm/Code/ropodInterface/devel/lib/pkgconfig:$PKG_CONFIG_PATH"
 export PWD="/home/pritesh/Desktop/sem2/sdp/sdp_ss2019_P6_IntentionComm/Code/ropodInterface/build"
 export ROSLISP_PACKAGE_DIRECTORIES="/home/pritesh/Desktop/sem2/sdp/sdp_ss2019_P6_IntentionComm/Code/ropodInterface/devel/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
