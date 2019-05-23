@@ -1,2 +1,0 @@
-communication_module
--DCATKIN_DEVEL_PREFIX=/home/pritesh/Desktop/sem2/sdp/sdp_ss2019_P6_IntentionComm/Code/ropodInterface/devel -DCMAKE_INSTALL_PREFIX=/home/pritesh/Desktop/sem2/sdp/sdp_ss2019_P6_IntentionComm/Code/ropodInterface/install -G Unix Makefiles
