@@ -146,6 +146,31 @@ void executeAction(){
     blickGeneral(UARTmsg.unLed_Number,UARTmsg.unLed_Colour);
     Buzzer(UARTmsg.unBuzz_time,UARTmsg.unBuzz_Freq);
   }
+  else if(UARTmsg.unBlink_Pattern == 0x1004){
+    movingDiagonal(UARTmsg.unLed_Number,UARTmsg.unLed_Colour);
+    Buzzer(UARTmsg.unBuzz_time,UARTmsg.unBuzz_Freq);
+  }
+  else if(UARTmsg.unBlink_Pattern == 0x1005){
+    movingDiagonal(UARTmsg.unLed_Number,UARTmsg.unLed_Colour);
+    Buzzer(UARTmsg.unBuzz_time,UARTmsg.unBuzz_Freq);
+  }
+  else if(UARTmsg.unBlink_Pattern == 0x1006){
+    movingDiagonal(UARTmsg.unLed_Number,UARTmsg.unLed_Colour);
+    Buzzer(UARTmsg.unBuzz_time,UARTmsg.unBuzz_Freq);
+  }
+  else if(UARTmsg.unBlink_Pattern == 0x1007){
+    movingDiagonal(UARTmsg.unLed_Number,UARTmsg.unLed_Colour);
+    Buzzer(UARTmsg.unBuzz_time,UARTmsg.unBuzz_Freq);
+  }
+  else if(UARTmsg.unBlink_Pattern == 0x1008){
+    rotateCW(UARTmsg.unLed_Number,UARTmsg.unLed_Colour);
+  }
+  else if(UARTmsg.unBlink_Pattern == 0x1009){
+    rotateACW(UARTmsg.unLed_Number,UARTmsg.unLed_Colour);
+  }
+  else if(UARTmsg.unBlink_Pattern == 0x1010){
+    docking(UARTmsg.unLed_Number,UARTmsg.unLed_Colour);
+  }
 }
 
 
@@ -213,6 +238,95 @@ void movingReverse(uint16_t LedNumber, uint32_t colour){
     delay(300);
   }
 }
+
+void movingDiagonal(uint16_t LedNumber, uint32_t colour){
+  CircuitPlayground.clearPixels();              //clear all the LED pixels
+  delay(150);
+  bool singleBit = 0;
+  for (int i = 0; i<10; i++){
+    singleBit = (LedNumber >> i) & 1;
+    if (singleBit){
+      CircuitPlayground.setPixelColor(i,colour);
+    }
+  }
+  delay(200);
+  }
+
+void rotateACW(uint16_t LedNumber, uint32_t colour) {
+  // Can be any two pixels
+  int pixel1 = 0;
+  int pixel2 = 5;
+  while(pixel2 <10){
+    CircuitPlayground.clearPixels();
+    // Turn on two pixels to SPIN_COLOR
+    CircuitPlayground.setPixelColor(pixel1, colour);
+    CircuitPlayground.setPixelColor(pixel2, colour);
+
+
+    CircuitPlayground.setPixelColor(pixel1+1, colour);
+    CircuitPlayground.setPixelColor(pixel2+1, colour);
+    // Increment pixels to move them around the board
+    pixel1 = pixel1 + 1;
+    pixel2 = pixel2 + 1;
+    
+    // Wait a little bit so we don't spin too fast
+    delay(100);
+  }
+}
+
+void rotateCW(uint16_t LedNumber, uint32_t colour) {
+  // Can be any two pixels
+  int pixel1 = 4;
+  int pixel2 = 9;
+  while(pixel2 >4){
+    CircuitPlayground.clearPixels();
+    // Turn on two pixels to SPIN_COLOR
+    CircuitPlayground.setPixelColor(pixel1, colour);
+    CircuitPlayground.setPixelColor(pixel2, colour);
+  
+    // Increment pixels to move them around the board
+    pixel1 = pixel1 - 1;
+    pixel2 = pixel2 - 1;
+  
+    // Wait a little bit so we don't spin too fast
+    delay(100);
+  }
+}
+
+void docking(uint16_t LedNumber, uint32_t colour) {
+  int pixel1 = 0;
+  int pixel2 = 9;
+  
+  while (1) {
+    // Scan in one direction
+    for (int step=0; step<4; step++) {
+      CircuitPlayground.clearPixels();
+    
+      CircuitPlayground.setPixelColor(pixel1, colour);
+      CircuitPlayground.setPixelColor(pixel2, colour);
+  
+      pixel1 = pixel1 + 1;
+      pixel2 = pixel2 - 1;
+      
+      delay(100);    
+    }
+  
+    // Scan back the other direction
+    for (int step=0; step<4; step++) {
+      CircuitPlayground.clearPixels();
+    
+      CircuitPlayground.setPixelColor(pixel1, colour);
+      CircuitPlayground.setPixelColor(pixel2, colour);
+  
+      pixel1 = pixel1 - 1;
+      pixel2 = pixel2 + 1;
+      
+      delay(100);
+    }
+    break;
+  }
+}
+
 
 void Buzzer(uint16_t Buzz_Freq, uint8_t Buzz_time)
 {
