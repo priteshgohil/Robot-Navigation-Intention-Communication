@@ -1,8 +1,0 @@
-prefix=/home/pritesh/Desktop/sem2/sdp/sdp_ss2019_P6_IntentionComm/Code/ropodInterface/install
-
-Name: communication_module
-Description: Description of communication_module
-Version: 0.0.0
-Cflags: 
-Libs: -L/home/pritesh/Desktop/sem2/sdp/sdp_ss2019_P6_IntentionComm/Code/ropodInterface/install/lib 
-Requires: 
