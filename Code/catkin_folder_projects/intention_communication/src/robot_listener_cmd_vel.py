@@ -130,4 +130,4 @@ if __name__ == '__main__':
 
     rospy.init_node('cmd_vel_listener')
     identify_motion = MotionIdentification()
-identify_motion.start()
+    identify_motion.start()
