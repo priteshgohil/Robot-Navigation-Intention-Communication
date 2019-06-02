@@ -1,0 +1,172 @@
+#!/usr/bin/env python
+import roslaunch
+import rospy
+from sensor_msgs.msg import Joy
+from geometry_msgs.msg import Twist
+from actionlib_msgs.msg import GoalID
+# from ropod_ros_msgs.msg import SmartWheelCommandList, SmartWheelCommand
+from ropod_ros_msgs.msg import DockingCommand
+# from ropod_ros_msgs.msg import Event
+
+class JoyButtons(object):
+    def __init__(self, button_list):
+        self.a = button_list[0]
+        self.b = button_list[1]
+        self.x = button_list[2]
+        self.y = button_list[3]
+        self.lb = button_list[4]
+        self.rb = button_list[5]
+
+class JoyAxes(object):
+    def __init__(self, axes_list):
+        self.x = axes_list[1]
+        self.y = axes_list[0]
+        self.z = axes_list[4]
+        self.theta = axes_list[3]
+        self.cross_x = axes_list[7]
+        self.cross_y = axes_list[6]
+        self.lt = axes_list[2]
+        self.rt = axes_list[5]
+
+class JoyNode(object):
+    def __init__(self):
+        self.joy_topic = rospy.get_param('~joy_topic', '/joy')
+        self.number_of_smart_wheels = int(rospy.get_param('~number_of_smart_wheels', 4))
+        self.base_vel_topic = rospy.get_param('~base_vel_topic', '/cmd_vel')
+        self.smart_wheel_command_topic = rospy.get_param('~smart_wheel_command_topic',
+                                                         '/smart_wheel/command')
+        self.docking_command_topic = rospy.get_param('~docking_command_topic',
+                                                     '/ropod/ropod_low_level_control/cmd_dock')
+        self.max_linear_vel = float(rospy.get_param('~max_linear_vel', 0.1))
+        self.max_angular_vel = float(rospy.get_param('~max_angular_vel', 0.1))
+        self.cancel_move_base_cmd = rospy.get_param('~cancel_move_base_cmd', False)
+        self.move_base_cancel_topic = rospy.get_param('~move_base_cancel_topic',
+                                                      '/move_base/cancel')
+        self.event_topic = rospy.get_param('~event_topic', '/ropod/event')
+        self.bringup_launcher = rospy.get_param('~bringup_launcher', '')
+        self.bringup = None
+
+        self.joy_sub = rospy.Subscriber(self.joy_topic, Joy, self.joy_cmd_cb)
+        self.twist_pub = rospy.Publisher(self.base_vel_topic, Twist, queue_size=1)
+        self.move_base_cancel_pub = rospy.Publisher(self.move_base_cancel_topic,
+                                                    GoalID, queue_size=1)
+        # self.smart_wheel_command_pub = rospy.Publisher(self.smart_wheel_command_topic,
+                                                       # SmartWheelCommandList, queue_size=1)
+        self.docking_command_pub = rospy.Publisher(self.docking_command_topic,
+                                                   DockingCommand, queue_size=1)
+        # self.event_pub = rospy.Publisher(self.event_topic, Event, queue_size=1)
+
+        self.last_vel_cmd = Twist()
+        # self.event_msg = Event()
+        self.docking_msg = DockingCommand()
+        self.publish_vel = False
+
+        # self.last_sw_cmd = SmartWheelCommandList()
+        self.publish_sw_cmd = False
+
+        self.bringup_requested = False
+        self.bringdown_requested = False
+
+        self.bringup_launched = False
+
+        loop_rate = rospy.Rate(10)
+        while not rospy.is_shutdown():
+            if self.publish_vel:
+                self.twist_pub.publish(self.last_vel_cmd)
+            if self.publish_sw_cmd:
+                self.smart_wheel_command_pub.publish(self.last_sw_cmd)
+
+            if self.bringup_requested:
+                self.__bringup()
+                self.bringup_requested = False
+                self.bringup_launched = True
+            elif self.bringdown_requested:
+                self.__bringdown()
+                self.bringdown_requested = False
+                self.bringup_launched = False
+            loop_rate.sleep()
+
+    def joy_cmd_cb(self, joy_cmd):
+        buttons = JoyButtons(joy_cmd.buttons)
+        axes = JoyAxes(joy_cmd.axes)
+        if buttons.rb:
+            if buttons.lb:
+                if buttons.a and not self.bringup_launched:
+                    self.bringup_requested = True
+                elif buttons.x and self.bringup_launched:
+                    self.bringdown_requested = True
+                elif buttons.b:
+                    self.docking_msg.docking_command = 1
+                    self.docking_command_pub.publish(self.docking_msg)
+                elif buttons.y:
+                    self.docking_msg.docking_command = 2
+                    self.docking_command_pub.publish(self.docking_msg)
+            else:
+                pass
+                # # sw_cmd_list = SmartWheelCommandList()
+                # for _ in range(self.number_of_smart_wheels):
+                #     # cmd = SmartWheelCommand()
+                #     sw_cmd_list.commands.append(cmd)
+
+                # if buttons.y:
+                #     sw_cmd_list.commands[0].command = self.max_angular_vel * axes.cross_y
+                #     sw_cmd_list.commands[0].type = SmartWheelCommand.ANGULAR_VEL
+                #     self.publish_sw_cmd = True
+                # elif buttons.b:
+                #     sw_cmd_list.commands[1].command = self.max_angular_vel * axes.cross_y
+                #     sw_cmd_list.commands[1].type = SmartWheelCommand.ANGULAR_VEL
+                #     self.publish_sw_cmd = True
+                # elif buttons.a:
+                #     sw_cmd_list.commands[2].command = self.max_angular_vel * axes.cross_y
+                #     sw_cmd_list.commands[2].type = SmartWheelCommand.ANGULAR_VEL
+                #     self.publish_sw_cmd = True
+                # elif buttons.x:
+                #     sw_cmd_list.commands[3].command = self.max_angular_vel * axes.cross_y
+                #     sw_cmd_list.commands[3].type = SmartWheelCommand.ANGULAR_VEL
+                #     self.publish_sw_cmd = True
+                # self.last_sw_cmd = sw_cmd_list
+
+            if self.move_base_cancel_topic:
+                move_base_cancel_msg = GoalID()
+                self.move_base_cancel_pub.publish(move_base_cancel_msg)
+
+            twist_msg = Twist()
+            twist_msg.linear.x = self.max_linear_vel * axes.x
+            twist_msg.linear.y = self.max_linear_vel * axes.y
+            if abs(axes.theta) > 1e-5:
+                if axes.theta > 0.:
+                    twist_msg.angular.z = self.max_angular_vel
+                else:
+                    twist_msg.angular.z = -self.max_angular_vel
+            self.last_vel_cmd = twist_msg
+            self.publish_vel = True
+        elif buttons.lb:
+            if buttons.x:
+                self.event_msg.stamp = rospy.Time.now()
+                # self.event_pub.publish(self.event_msg)
+        else:
+            self.last_vel_cmd = Twist()
+            self.twist_pub.publish(self.last_vel_cmd)
+            self.publish_vel = False
+
+            # self.last_sw_cmd = SmartWheelCommandList()
+            # for _ in range(self.number_of_smart_wheels):
+            #     cmd = SmartWheelCommand()
+            #     self.last_sw_cmd.commands.append(cmd)
+            # self.smart_wheel_command_pub.publish(self.last_sw_cmd)
+            self.publish_sw_cmd = False
+
+    def __bringup(self):
+        uuid = roslaunch.rlutil.get_or_generate_uuid(None, False)
+        roslaunch.configure_logging(uuid)
+        self.bringup = roslaunch.parent.ROSLaunchParent(uuid, [self.bringup_launcher])
+        self.bringup.start()
+
+    def __bringdown(self):
+        self.bringup.shutdown()
+        self.bringup = None
+
+if __name__ == '__main__':
+    rospy.init_node('ropod_joy')
+    JoyNode()
+    rospy.spin()

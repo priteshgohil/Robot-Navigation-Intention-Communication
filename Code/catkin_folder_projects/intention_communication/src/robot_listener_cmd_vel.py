@@ -27,7 +27,7 @@ class MotionIdentification(object):
         self.y_linear_velocity = 0
         self.z_angular_velocity = 0
         # node cycle rate (in hz)
-        self.loop_rate = rospy.Rate(0.5)
+        self.loop_rate = rospy.Rate(1.5)
         # subscribers
         rospy.Subscriber("/cmd_vel", Twist, self.update_cmd_vel_message)
 
@@ -42,7 +42,6 @@ class MotionIdentification(object):
     def start(self):
         """
         Start sending the messages to arduino
-
         """
         rospy.loginfo("Ready to start...")
         while not rospy.is_shutdown():
@@ -124,12 +123,6 @@ def send_to_arduino(x,y,z):
     x_prev = x
     y_prev = y
     z_prev = z
-
-# def listener(uno,dos,tres):
-#     rospy.init_node('cmd_vel_listener')
-#     rospy.Subscriber("/cmd_vel", Twist, callback)
-#     # rospy.rate(100)
-#     rospy.spin()
 
 if __name__ == '__main__':
     serial_msg = playground_interface.SerialInterface(9600,1,"239A")

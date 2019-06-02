@@ -1,0 +1,15 @@
+#!/bin/bash
+read -p "Have you already connected to ps4 controller using sudo ds4drv  (y/n)?" choice
+case "$choice" in 
+  y|Y ) echo "yes"
+	sudo chmod a+rw /dev/input/js1
+	gnome-terminal -e roscore
+	sleep 5
+	rosparam set joy_node/dev "/dev/input/js1" 
+	roslaunch ropod_teleop joy.launch;;
+  n|N ) echo "Your answer was no"
+	echo "Please connect to controller before start this operation"
+	echo "You may use the command sudo ds4drv ";;
+  * ) echo "invalid";;
+esac
+
