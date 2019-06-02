@@ -1,0 +1,3 @@
+string id
+ropod_demo_status locationStatus
+geometry_msgs/Pose waypointPosition

@@ -1,0 +1,4 @@
+string areaName
+string id
+ropod_demo_status locationStatus
+ropod_demo_waypoint[] waypoints

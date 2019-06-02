@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<launch>
+    <node pkg="joy" type="joy_node" name="joy" output="screen">
+        <param name="dev" value="/dev/input/js1" />
+    </node>
+
+    <node pkg="ropod_teleop" type="joy" name="ropod_teleop" output="screen">
+        <param name="joy_topic" value="/joy" />
+        <param name="number_of_smart_wheels" value="4" />
+        <param name="base_vel_topic" value="/cmd_vel" />
+        <param name="smart_wheel_command_topic" value="/smart_wheel/command" />
+        <param name="docking_command_topic" value="/ropod/ropod_low_level_control/cmd_dock" />
+        <param name="event_topic" value="/ropod/event" />
+        <param name="max_linear_vel" value="1.0" />
+        <param name="max_angular_vel" value="1.0" />
+        <!--Your comment<param name="bringup_launcher" value="$(find ropod_bringup)/launch/start.launch" />-->
+    </node>
+</launch>
