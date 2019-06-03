@@ -59,7 +59,8 @@ void loop() {
  if(UARTmsg.bnewData){
   parseMessage();
  }
- executeAction();
+ //executeAction();
+ executeCmdVel();
 }
 
 void isDataAvailable() {
@@ -131,6 +132,10 @@ void parseMessage(){
       UARTmsg.bDataAvailable = true;
 }
 
+
+void executeCmdVel(){
+  blickGeneral(UARTmsg.unLed_Number, UARTmsg.unLed_Colour);
+}
 
 void executeAction(){
   if(UARTmsg.unBlink_Pattern == 0x1000){
