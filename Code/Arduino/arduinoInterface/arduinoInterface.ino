@@ -181,15 +181,17 @@ void executeAction(){
 
 void blickGeneral(uint16_t LedNumber, uint32_t colour){
   CircuitPlayground.clearPixels();              //clear all the LED pixels
-  delay(300);
+  delay(150);
   bool singleBit = 0;
-  for (int i = 0; i<10; i++){
+  if(LedNumber){
+    for (int i = 0; i<10; i++){
     singleBit = (LedNumber >> i) & 1;
     if (singleBit){
       CircuitPlayground.setPixelColor(i,colour);
     }
   }
-  delay(300);
+  delay(200); 
+  }
 }
 
 

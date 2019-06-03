@@ -27,7 +27,7 @@ class MotionIdentification(object):
         self.y_linear_velocity = 0
         self.z_angular_velocity = 0
         # node cycle rate (in hz)
-        self.loop_rate = rospy.Rate(1.5)
+        self.loop_rate = rospy.Rate(0.5)
         # subscribers
         rospy.Subscriber("/cmd_vel", Twist, self.update_cmd_vel_message)
 
@@ -42,6 +42,7 @@ class MotionIdentification(object):
     def start(self):
         """
         Start sending the messages to arduino
+
         """
         rospy.loginfo("Ready to start...")
         while not rospy.is_shutdown():
@@ -75,21 +76,21 @@ def send_to_arduino(x,y,z):
             if z>z_threshold:
                 status = "rotation"
                 rospy.loginfo("Turning ACW")
-                serial_msg.send_command("<RIC##LED:03FF:FF1122;PAT:1009;BUZ:2000;50;2003#RIC>")
+                serial_msg.send_command("<RIC##LED:03FF:00FF00;PAT:1009;BUZ:2000;50;2003#RIC>")
             else:
                 status = "rotation"
                 rospy.loginfo("Turning CW")
-                serial_msg.send_command("<RIC##LED:03FF:FF1122;PAT:1008;BUZ:2000;50;2003#RIC>")
+                serial_msg.send_command("<RIC##LED:03FF:00FF00;PAT:1008;BUZ:2000;50;2003#RIC>")
         #handle linear velocity
         else:
             if x>x_threshold and y>=0 and y<0.01: #idially y should be zero but we know that in actual implementation it will not be
                 status = "linear"
                 rospy.loginfo("Going straigt")
-                serial_msg.send_command("<RIC##LED:0387:FFFFFF;PAT:1000;BUZ:2000;50;2001#RIC>")
+                serial_msg.send_command("<RIC##LED:0387:00FF00;PAT:1000;BUZ:2000;50;2001#RIC>")
             elif x<=(-x_threshold) and y>=0 and y<0.01:
                 status = "linear"
                 rospy.loginfo("Going reverse")
-                serial_msg.send_command("<RIC##LED:00FC:00EE00;PAT:1001;BUZ:2000;50;2003#RIC>")
+                serial_msg.send_command("<RIC##LED:00FC:00FF00;PAT:1001;BUZ:2000;50;2003#RIC>")
             elif x>=0 and x<0.01 and y<=(-y_threshold):
                 status = "linear"
                 rospy.loginfo("Going right")
@@ -97,29 +98,29 @@ def send_to_arduino(x,y,z):
             elif x>=0 and x<0.01 and y>=y_threshold:
                 status = "linear"
                 rospy.loginfo("Going left")
-                serial_msg.send_command("<RIC##LED:001F:00EEFF;PAT:1003;BUZ:2000;50;2003#RIC>")
+                serial_msg.send_command("<RIC##LED:001F:00FF00;PAT:1003;BUZ:2000;50;2003#RIC>")
             elif x>=x_threshold and y<=(-y_threshold) :
                 status = "linear"
                 rospy.loginfo("TR_Diagonal")
-                serial_msg.send_command("<RIC##LED:0380:FFFF22;PAT:1004;BUZ:2000;50;2003#RIC>")
+                serial_msg.send_command("<RIC##LED:0380:00FF00;PAT:1004;BUZ:2000;50;2003#RIC>")
             elif x>=x_threshold and y>=y_threshold :
                 status = "linear"
                 rospy.loginfo("TL Diagonal")
-                serial_msg.send_command("<RIC##LED:0007:FFFF22;PAT:1005;BUZ:2000;50;2003#RIC>")
+                serial_msg.send_command("<RIC##LED:0007:00FF00;PAT:1005;BUZ:2000;50;2003#RIC>")
             elif x<=(-x_threshold) and y<=(-y_threshold) :
                 status = "linear"
                 rospy.loginfo("BR Diagonal")
-                serial_msg.send_command("<RIC##LED:00E0:FFFF22;PAT:1006;BUZ:2000;50;2003#RIC>")
+                serial_msg.send_command("<RIC##LED:00E0:00FF00;PAT:1006;BUZ:2000;50;2003#RIC>")
             elif x<=(x_threshold) and y>=y_threshold:
                 status = "linear"
                 rospy.loginfo("BL Diagonal")
-                serial_msg.send_command("<RIC##LED:001C:FFFF22;PAT:1007;BUZ:2000;50;2003#RIC>")
+                serial_msg.send_command("<RIC##LED:001C:00FF00;PAT:1007;BUZ:2000;50;2003#RIC>")
             else:
                 #unknown condition
                 if(status == 'linear' or status == 'rotation'):
                     status = 'unknown'
                     rospy.loginfo("Doing something else")
-                    serial_msg.send_command("<RIC##LED:03FF:FF0000;PAT:1010;BUZ:2000;50;2003#RIC>")
+                    serial_msg.send_command("<RIC##LED:0000:FF0000;PAT:1010;BUZ:2000;50;2003#RIC>")
     x_prev = x
     y_prev = y
     z_prev = z
