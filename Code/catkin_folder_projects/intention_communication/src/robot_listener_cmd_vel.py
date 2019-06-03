@@ -119,7 +119,7 @@ def send_to_arduino(x,y,z):
                 if(status == 'linear' or status == 'rotation'):
                     status = 'unknown'
                     rospy.loginfo("Doing something else")
-                    serial_msg.send_command("<RIC##LED:03FF:FF0000;PAT:1010;BUZ:2000;50;2003#RIC>")
+                    # serial_msg.send_command("<RIC##LED:03FF:FF0000;PAT:1010;BUZ:2000;50;2003#RIC>")
     x_prev = x
     y_prev = y
     z_prev = z
