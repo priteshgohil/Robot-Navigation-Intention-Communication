@@ -12,6 +12,7 @@ import tf.transformations
 from geometry_msgs.msg import Twist
 from std_msgs.msg import String
 from ropod_ros_msgs.msg import DockingCommand
+from ropod_ros_msgs.msg import  DockingFeedback
 import playground_interface
 import numpy as np
 command_to_sent ="some"
@@ -30,6 +31,7 @@ class MotionIdentification(object):
         self.motion = "None"
         self.angle = 0.0
         self.docking=None
+        self.docking_state = None
         self.prev_dock_status = 0
         #framework params
         self.led_numbers_hex = ""
@@ -45,6 +47,7 @@ class MotionIdentification(object):
         # subscribers
         rospy.Subscriber("/cmd_vel", Twist, self.update_cmd_vel_message)
         rospy.Subscriber("/ropod/ropod_low_level_control/cmd_dock",DockingCommand,self.update_dock_message)
+        rospy.Subscriber("/ropod/ropod_low_level_control/dockingFeedback",DockingFeedback,self.update_dock_status)
 
     def get_docking_status(self):
         """
@@ -65,6 +68,12 @@ class MotionIdentification(object):
         docking_string= nowisastring.split(' ')[1]
         rospy.loginfo("Received docking command:  "+docking_string)
         self.docking=int(docking_string)
+
+    def update_dock_status(self, msg):
+        """
+        Obtains internal status while docking.
+        """
+        self.docking_state = msg.docking_status
 
     def update_cmd_vel_message(self, msg):
         """
@@ -92,38 +101,49 @@ class MotionIdentification(object):
         #     else:
         #         motion = "CW rotation"
         # else:
-        if (self.y_linear_velocity ==0 and self.x_linear_velocity==0):
-            if(self.prev_dock_status!=self.docking and self.docking == 2):
-                self.prev_dock_status = self.docking
-                led_numbers = [1,2,3,4,5,6,7,8,9]
-                motion = "Dockin"
-            else:
-                led_numbers = []
-                motion = "None"
-        elif (angle_in_degree<30 and angle_in_degree>-30.0):
-            led_numbers = [1, 2, 10, 9]
-            motion = "straight"
-        elif (angle_in_degree<=60.0 and angle_in_degree>=30.0):
-            led_numbers = [1, 2, 3]
-            motion = "TopLeft Diagonal"
-        elif (angle_in_degree>60.0 and angle_in_degree<120.0):
-            led_numbers = [1, 2, 3, 4, 5]
-            motion = "Left"
-        elif (angle_in_degree>=120.0 and angle_in_degree<=150.0):
-            led_numbers = [3, 4, 5]
-            motion = "BottomLeft Diagonal"
-        elif ((angle_in_degree>150.0 and angle_in_degree<=180.0) or (angle_in_degree<-150.0 and angle_in_degree>=-180.0) ):
-            led_numbers = [4, 5, 6, 7]
-            motion = "Reverse"
-        elif (angle_in_degree>=-150 and angle_in_degree<=-120.0):
-            led_numbers = [6, 7, 8]
-            motion = "BottomRight Diagonal"
-        elif (angle_in_degree>-120.0 and angle_in_degree<-60):
-            led_numbers = [6, 7, 8, 9, 10]
-            motion = "Right"
-        elif (angle_in_degree>=-60.0 and angle_in_degree<=-30.0):
-            led_numbers = [ 8, 9, 10]
-            motion = "TopRight Diagonal"
+
+        rospy.loginfo("dock_State = {}".format(self.docking_state))
+        if self.docking_state in range(1,6):
+            motion = "docking"
+            led_numbers = [1,2,3,4,5,6,7,8,9,10]
+            rospy.loginfo("inside dock_State")
+        elif self.docking_state==12:
+            motion = "undocking"
+            led_numbers = [1,2,3,4,5,6,7,8,9,10]
+            rospy.loginfo("inside dock_State")
+        else:
+        	if (self.y_linear_velocity ==0 and self.x_linear_velocity==0):
+        	    if(self.prev_dock_status!=self.docking and self.docking == 1):
+        	        self.prev_dock_status = self.docking
+        	        led_numbers = [1,2,3,4,5,6,7,8,9,10]
+        	        motion = "Dockin"
+        	    else:
+        	        led_numbers = []
+        	        motion = "None"
+        	elif (angle_in_degree<30 and angle_in_degree>-30.0):
+        	    led_numbers = [1, 2, 10, 9]
+        	    motion = "straight"
+        	elif (angle_in_degree<=60.0 and angle_in_degree>=30.0):
+        	    led_numbers = [1, 2, 3]
+        	    motion = "TopLeft Diagonal"
+        	elif (angle_in_degree>60.0 and angle_in_degree<120.0):
+        	    led_numbers = [1, 2, 3, 4, 5]
+        	    motion = "Left"
+        	elif (angle_in_degree>=120.0 and angle_in_degree<=150.0):
+        	    led_numbers = [3, 4, 5]
+        	    motion = "BottomLeft Diagonal"
+        	elif ((angle_in_degree>150.0 and angle_in_degree<=180.0) or (angle_in_degree<-150.0 and angle_in_degree>=-180.0) ):
+        	    led_numbers = [4, 5, 6, 7]
+        	    motion = "Reverse"
+        	elif (angle_in_degree>=-150 and angle_in_degree<=-120.0):
+        	    led_numbers = [6, 7, 8]
+        	    motion = "BottomRight Diagonal"
+        	elif (angle_in_degree>-120.0 and angle_in_degree<-60):
+        	    led_numbers = [6, 7, 8, 9, 10]
+        	    motion = "Right"
+        	elif (angle_in_degree>=-60.0 and angle_in_degree<=-30.0):
+        	    led_numbers = [ 8, 9, 10]
+        	    motion = "TopRight Diagonal"
         return motion, led_numbers
 
 
@@ -151,7 +171,11 @@ class MotionIdentification(object):
             led_number_in_hex = led_number_in_hex.upper()
             self.led_numbers_hex = led_number_in_hex[2:]
         rospy.loginfo("docking sttadfk debug = {}".format(self.get_docking_status()))
-        if(self.get_docking_status()):
+        if(self.docking_state in range(1,6)):
+            self.led_colour = "FFFF00"
+        elif(self.docking_state==12):
+            self.led_colour = "0000FF"
+        elif(self.get_docking_status()):
             self.led_colour = "FF0000"
         else:
             self.led_colour = "00FF00"
@@ -190,5 +214,4 @@ if __name__ == '__main__':
     rospy.init_node('cmd_vel_listener')
     identify_motion = MotionIdentification()
     identify_motion.start()
-    # msg = identify_motion.create_framework([0,1,2,3],"FF0000")
-    # print(msg)
+
