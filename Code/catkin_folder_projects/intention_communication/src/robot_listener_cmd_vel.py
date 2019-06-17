@@ -99,63 +99,65 @@ class MotionIdentification(object):
         if(abs(self.z_angular_velocity) >= 0.5):
             if self.z_angular_velocity > 0:
                 motion = "ACW rotation"
+                led_numbers = [1,2,3,4,5,6,7,8,9,10]
                 self.ledpattern_number = "1009"
             else:
                 motion = "CW rotation"
-                self.ledpattern_number = "1009"
+                led_numbers = [1,2,3,4,5,6,7,8,9,10]
+                self.ledpattern_number = "1008"
         else:
             rospy.loginfo("dock_State = {}".format(self.docking_state))
             if self.docking_state in range(1,6):
                 motion = "docking"
                 led_numbers = [1,2,3,4,5,6,7,8,9,10]
-    	    self.ledpattern_number = "1020"
+                self.ledpattern_number = "1020"
                 rospy.loginfo("inside dock_State")
             elif self.docking_state==12:
                 motion = "undocking"
                 led_numbers = [1,2,3,4,5,6,7,8,9,10]
-    	    self.ledpattern_number = "1020"
+                self.ledpattern_number = "1020"
                 rospy.loginfo("inside dock_State")
             else:
             	if (self.y_linear_velocity ==0 and self.x_linear_velocity==0):
             	    if(self.prev_dock_status!=self.docking and self.docking == 1):
             	        self.prev_dock_status = self.docking
             	        led_numbers = [1,2,3,4,5,6,7,8,9,10]
-    			self.ledpattern_number = "1020"
+                        self.ledpattern_number = "1020"
             	        motion = "Dockin"
             	    else:
             	        led_numbers = []
             	        motion = "None"
             	elif (angle_in_degree<30 and angle_in_degree>-30.0):
             	    led_numbers = [1, 2, 10, 9]
-    		    self.ledpattern_number = "1020"
+                    self.ledpattern_number = "1020"
             	    motion = "straight"
             	elif (angle_in_degree<=60.0 and angle_in_degree>=30.0):
             	    led_numbers = [1, 2, 3]
-    		    self.ledpattern_number = "1020"
+                    self.ledpattern_number = "1020"
             	    motion = "TopLeft Diagonal"
             	elif (angle_in_degree>60.0 and angle_in_degree<120.0):
             	    led_numbers = [1, 2, 3, 4, 5]
-    		    self.ledpattern_number = "1020"
+                    self.ledpattern_number = "1020"
             	    motion = "Left"
             	elif (angle_in_degree>=120.0 and angle_in_degree<=150.0):
             	    led_numbers = [3, 4, 5]
-    		    self.ledpattern_number = "1020"
+                    self.ledpattern_number = "1020"
             	    motion = "BottomLeft Diagonal"
             	elif ((angle_in_degree>150.0 and angle_in_degree<=180.0) or (angle_in_degree<-150.0 and angle_in_degree>=-180.0) ):
             	    led_numbers = [4, 5, 6, 7]
-    		    self.ledpattern_number = "1020"
+                    self.ledpattern_number = "1020"
             	    motion = "Reverse"
             	elif (angle_in_degree>=-150 and angle_in_degree<=-120.0):
             	    led_numbers = [6, 7, 8]
-    		    self.ledpattern_number = "1020"
+                    self.ledpattern_number = "1020"
             	    motion = "BottomRight Diagonal"
             	elif (angle_in_degree>-120.0 and angle_in_degree<-60):
             	    led_numbers = [6, 7, 8, 9, 10]
-    		    self.ledpattern_number = "1020"
+                    self.ledpattern_number = "1020"
             	    motion = "Right"
             	elif (angle_in_degree>=-60.0 and angle_in_degree<=-30.0):
             	    led_numbers = [ 8, 9, 10]
-    		    self.ledpattern_number = "1020"
+                    self.ledpattern_number = "1020"
             	    motion = "TopRight Diagonal"
         return motion, led_numbers
 
