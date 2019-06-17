@@ -159,6 +159,11 @@ class MotionIdentification(object):
 
 
     def create_framework(self, led_number, led_colour):
+        """
+        from received LED colour and LED number, create string message framework to 
+	be sent to arduino
+
+        """
         led_number_in_hex = 0
         rospy.loginfo("led_number debug = "+str(led_number))
         if (len(led_number)==0):
