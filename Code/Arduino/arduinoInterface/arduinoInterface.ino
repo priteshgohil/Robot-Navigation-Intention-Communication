@@ -59,8 +59,8 @@ void loop() {
  if(UARTmsg.bnewData){
   parseMessage();
  }
- //executeAction();
- executeCmdVel();
+ executeAction();
+// executeCmdVel();
 }
 
 void isDataAvailable() {
@@ -176,6 +176,9 @@ void executeAction(){
   else if(UARTmsg.unBlink_Pattern == 0x1010){
     docking(UARTmsg.unLed_Number,UARTmsg.unLed_Colour);
   }
+  else if(UARTmsg.unBlink_Pattern == 0x1020){
+    blickGeneral(UARTmsg.unLed_Number,UARTmsg.unLed_Colour);
+  }
 }
 
 
@@ -260,43 +263,49 @@ void movingDiagonal(uint16_t LedNumber, uint32_t colour){
   }
 
 void rotateACW(uint16_t LedNumber, uint32_t colour) {
-  // Can be any two pixels
-  int pixel1 = 0;
-  int pixel2 = 5;
-  while(pixel2 <10){
-    CircuitPlayground.clearPixels();
-    // Turn on two pixels to SPIN_COLOR
-    CircuitPlayground.setPixelColor(pixel1, colour);
-    CircuitPlayground.setPixelColor(pixel2, colour);
-
-
-    CircuitPlayground.setPixelColor(pixel1+1, colour);
-    CircuitPlayground.setPixelColor(pixel2+1, colour);
-    // Increment pixels to move them around the board
-    pixel1 = pixel1 + 1;
-    pixel2 = pixel2 + 1;
-    
-    // Wait a little bit so we don't spin too fast
-    delay(100);
+  CircuitPlayground.clearPixels();
+  if(LedNumber){
+    // Can be any two pixels
+    int pixel1 = 0;
+    int pixel2 = 5;
+    while(pixel2 <10){
+      CircuitPlayground.clearPixels();
+      // Turn on two pixels to SPIN_COLOR
+      CircuitPlayground.setPixelColor(pixel1, colour);
+      CircuitPlayground.setPixelColor(pixel2, colour);
+  
+  
+      CircuitPlayground.setPixelColor(pixel1+1, colour);
+      CircuitPlayground.setPixelColor(pixel2+1, colour);
+      // Increment pixels to move them around the board
+      pixel1 = pixel1 + 1;
+      pixel2 = pixel2 + 1;
+      
+      // Wait a little bit so we don't spin too fast
+      delay(100);
+    }
   }
 }
 
 void rotateCW(uint16_t LedNumber, uint32_t colour) {
-  // Can be any two pixels
-  int pixel1 = 4;
-  int pixel2 = 9;
-  while(pixel2 >4){
-    CircuitPlayground.clearPixels();
-    // Turn on two pixels to SPIN_COLOR
-    CircuitPlayground.setPixelColor(pixel1, colour);
-    CircuitPlayground.setPixelColor(pixel2, colour);
-  
-    // Increment pixels to move them around the board
-    pixel1 = pixel1 - 1;
-    pixel2 = pixel2 - 1;
-  
-    // Wait a little bit so we don't spin too fast
-    delay(100);
+  CircuitPlayground.clearPixels();
+  if(LedNumber){
+    // Can be any two pixels
+    int pixel1 = 4;
+    int pixel2 = 9;
+    while(pixel2 >4){
+      CircuitPlayground.clearPixels();
+      // Turn on two pixels to SPIN_COLOR
+      CircuitPlayground.setPixelColor(pixel1, colour);
+      CircuitPlayground.setPixelColor(pixel2, colour);
+    
+      // Increment pixels to move them around the board
+      pixel1 = pixel1 - 1;
+      pixel2 = pixel2 - 1;
+    
+      // Wait a little bit so we don't spin too fast
+      delay(100);
+    }
   }
 }
 
