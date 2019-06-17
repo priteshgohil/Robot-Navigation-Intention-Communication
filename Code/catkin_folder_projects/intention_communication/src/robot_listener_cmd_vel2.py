@@ -58,7 +58,7 @@ class MotionIdentification(object):
         led_numbers = []
         angle_in_radian = np.tanh(self.y_linear_velocity/self.x_linear_velocity)
         angle_in_degree =  np.deg2rad(angle_in_radian)
-        motion = ""
+        motion = "not found"
         #based on the calculated angle, decide the region of commanded Motion
         # First you may prefer to check for rotation
         if(abs(self.z_angular_velocity) >= 0.5):
@@ -96,7 +96,7 @@ class MotionIdentification(object):
 
     def set_bit(self,v, index, x):
         """Set the index:th bit of v to 1 if x is truthy, else to 0, and return the new value."""
-        mask = 1 << index   # Compute mask, an integer with just bit 'index' set.
+        mask = 1 << index-1   # Compute mask, an integer with just bit 'index' set.
         v &= ~mask          # Clear the bit indicated by the mask (if x is False)
         if x:
             v |= mask         # If x was True, set the bit indicated by the mask.
@@ -116,7 +116,7 @@ class MotionIdentification(object):
         return message_framework
 
     def send_framework(self, msg_framework):
-        serial_msg.send_command("<RIC##LED:00FC:00FF00;PAT:1001;BUZ:2000;50;2003#RIC>")
+        serial_msg.send_command(msg_framework)
 
     def start(self):
         """
@@ -130,87 +130,14 @@ class MotionIdentification(object):
             movement, leds = self.update_parameters()
             if (self.motion != movement):
                 self.motion = movement
-                framework = self.create_framework(movement,leds)
+                framework = self.create_framework(leds,"00FF00")
                 rospy.loginfo("detected motion is "+ motion)
                 self.send_framework(framework)
             else:
                 rospy.loginfo("Data is the same")
             # send_to_arduino(self.x_linear_velocity, self.y_linear_velocity,self.z_angular_velocity)
             # self.loop_rate.sleep()
-x_prev = 0
-y_prev = 0
-z_prev = 0
-status = "None"
-def send_to_arduino(x,y,z):
-    global x_prev
-    global y_prev
-    global z_prev
-    global status
-    rospy.loginfo("Received a /cmd_vel message!")
-    x = np.round(x,2)
-    y = np.round(y,2)
-    z = np.round(z,2)
 
-    #thresholds are critical and need to play with it even more
-    z_threshold = 0.5
-    y_threshold = 0.05
-    x_threshold = 0.05
-    if x_prev==x and y_prev==y:
-        rospy.loginfo("Data is the same")
-    else:
-        #handle only rotation
-        if(abs(z)>=0.3):
-            if z>z_threshold:
-                status = "Rotation ACW"
-                rospy.loginfo("Turning ACW")
-                serial_msg.send_command("<RIC##LED:03FF:00FF00;PAT:1009;BUZ:2000;50;2003#RIC>")
-            else:
-                status = "Rotation CW"
-                rospy.loginfo("Turning CW")
-                serial_msg.send_command("<RIC##LED:03FF:00FF00;PAT:1008;BUZ:2000;50;2003#RIC>")
-        #handle linear velocity
-        else:
-            if x>x_threshold and y>=0 and y<0.01: #idially y should be zero but we know that in actual implementation it will not be
-                status = "linear"
-                rospy.loginfo("Going straigt")
-                serial_msg.send_command("<RIC##LED:0387:00FF00;PAT:1000;BUZ:2000;50;2001#RIC>")
-            elif x<=(-x_threshold) and y>=0 and y<0.01:
-                status = "linear"
-                rospy.loginfo("Going reverse")
-                serial_msg.send_command("<RIC##LED:00FC:00FF00;PAT:1001;BUZ:2000;50;2003#RIC>")
-            elif x>=0 and x<0.01 and y<=(-y_threshold):
-                status = "linear"
-                rospy.loginfo("Going right")
-                serial_msg.send_command("<RIC##LED:03E0:00FF00;PAT:1002;BUZ:2000;50;2002#RIC>")
-            elif x>=0 and x<0.01 and y>=y_threshold:
-                status = "linear"
-                rospy.loginfo("Going left")
-                serial_msg.send_command("<RIC##LED:001F:00FF00;PAT:1003;BUZ:2000;50;2003#RIC>")
-            elif x>=x_threshold and y<=(-y_threshold) :
-                status = "linear"
-                rospy.loginfo("TR_Diagonal")
-                serial_msg.send_command("<RIC##LED:0380:00FF00;PAT:1004;BUZ:2000;50;2003#RIC>")
-            elif x>=x_threshold and y>=y_threshold :
-                status = "linear"
-                rospy.loginfo("TL Diagonal")
-                serial_msg.send_command("<RIC##LED:0007:00FF00;PAT:1005;BUZ:2000;50;2003#RIC>")
-            elif x<=(-x_threshold) and y<=(-y_threshold) :
-                status = "linear"
-                rospy.loginfo("BR Diagonal")
-                serial_msg.send_command("<RIC##LED:00E0:00FF00;PAT:1006;BUZ:2000;50;2003#RIC>")
-            elif x<=(x_threshold) and y>=y_threshold:
-                status = "linear"
-                rospy.loginfo("BL Diagonal")
-                serial_msg.send_command("<RIC##LED:001C:00FF00;PAT:1007;BUZ:2000;50;2003#RIC>")
-            else:
-                #unknown condition
-                if(status == 'linear' or status == 'rotation'):
-                    status = 'unknown'
-                    rospy.loginfo("Doing something else")
-                    serial_msg.send_command("<RIC##LED:0000:FF0000;PAT:1010;BUZ:2000;50;2003#RIC>")
-    x_prev = x
-    y_prev = y
-    z_prev = z
 
 if __name__ == '__main__':
     serial_msg = playground_interface.SerialInterface(9600,1,"239A")
