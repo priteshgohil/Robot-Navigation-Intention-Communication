@@ -36,4 +36,4 @@ Each input parameter is separated by semi colon
  
   - XX: Desired frequency
  
-  - XXXX; 
+  - XXXX: pattern for sound tone
