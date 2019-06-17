@@ -20,4 +20,5 @@ class SerialInterface:
 
     def send_command(self,message_to_send):
         print("sending cmd")
+        self.arduino.flushInput()
         self.arduino.write(message_to_send.encode())

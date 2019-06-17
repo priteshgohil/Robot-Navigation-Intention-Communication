@@ -48,3 +48,16 @@ Priteshkumar Gohil and Eduardo Cervantes:
 
 * Last week we did integration test with the ROPOD and our demo code was successfully working.
 * We also started looking into ROPOD maneuver navigation and planner code to get access of the publishing messages. 
+
+
+Date: 10.06.2019
+
+Priteshkumar Gohil
+* In last two week, I have refactored the cmd_vel code and placed it in proper function in python class.
+* Then as per requirement, I have written the code that can check the robot motion from cmd_vel msg and generate message frame dynamically instead of fixed pattern.
+* Together with eduardo, we tested new dynamic logic of intention communication with ROPOD platform.
+* We found some bugs and fixed it during the demonstration in lab.
+
+Next task: 
+* Add intention when the ROBOT is rotating.
+* Add the sound notification during docking and undocking state.
