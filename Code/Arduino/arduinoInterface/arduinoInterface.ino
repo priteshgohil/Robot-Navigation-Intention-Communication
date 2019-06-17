@@ -59,8 +59,8 @@ void loop() {
  if(UARTmsg.bnewData){
   parseMessage();
  }
- //executeAction();
- executeCmdVel();
+ executeAction();
+// executeCmdVel();
 }
 
 void isDataAvailable() {
@@ -175,6 +175,9 @@ void executeAction(){
   }
   else if(UARTmsg.unBlink_Pattern == 0x1010){
     docking(UARTmsg.unLed_Number,UARTmsg.unLed_Colour);
+  }
+  else if(UARTmsg.unBlink_Pattern == 0x1020){
+    blickGeneral(UARTmsg.unLed_Number,UARTmsg.unLed_Colour);
   }
 }
 
