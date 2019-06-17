@@ -263,6 +263,7 @@ void movingDiagonal(uint16_t LedNumber, uint32_t colour){
   }
 
 void rotateACW(uint16_t LedNumber, uint32_t colour) {
+  CircuitPlayground.clearPixels();
   if(LedNumber){
     // Can be any two pixels
     int pixel1 = 0;
@@ -287,6 +288,7 @@ void rotateACW(uint16_t LedNumber, uint32_t colour) {
 }
 
 void rotateCW(uint16_t LedNumber, uint32_t colour) {
+  CircuitPlayground.clearPixels();
   if(LedNumber){
     // Can be any two pixels
     int pixel1 = 4;
