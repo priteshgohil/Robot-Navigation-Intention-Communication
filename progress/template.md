@@ -61,3 +61,11 @@ Priteshkumar Gohil
 Next task: 
 * Add intention when the ROBOT is rotating.
 * Add the sound notification during docking and undocking state.
+
+Date: 17.06.2019
+
+Eduardo Cervantes
+
+* Rospy update rate was updates, previosly it has a problem when the rate hass above 1Hz now after the error was identified the library was modified to support a higher rate.
+* The detected angles now are at diagonals also, improving the ability of the robot to comunicate his intentions. 
+* 
