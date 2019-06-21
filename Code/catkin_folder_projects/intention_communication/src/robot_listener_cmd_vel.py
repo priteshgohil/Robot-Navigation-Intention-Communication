@@ -38,7 +38,8 @@ class MotionIdentification(object):
         self.led_colour = ""
         self.header = "<RIC##"
         self.led_frame = "LED:"
-        self.ledpattern_frame = ";PAT:1020"
+        self.ledpattern_frame = ";PAT:"
+        self.ledpattern_number = "1020"
         self.buzzer_frame = ";BUZ:2000;50;2003"
         self.end_of_frame = "#RIC>"
 
@@ -100,55 +101,69 @@ class MotionIdentification(object):
         #based on the calculated angle, decide the region of commanded Motion
         # First you may prefer to check for rotation
         rospy.loginfo("angle_in_degree debug = "+str(angle_in_degree))
-        # if(abs(self.z_angular_velocity) >= 0.5):
-        #     if self.z_angular_velocity > 0:
-        #         motion = "ACW rotation"
-        #     else:
-        #         motion = "CW rotation"
-        # else:
-
-        rospy.loginfo("dock_State = {}".format(self.docking_state))
-        if self.docking_state in range(1,6):
-            motion = "docking"
-            led_numbers = [1,2,3,4,5,6,7,8,9,10]
-            rospy.loginfo("inside dock_State")
-        elif self.docking_state==12:
-            motion = "undocking"
-            led_numbers = [1,2,3,4,5,6,7,8,9,10]
-            rospy.loginfo("inside dock_State")
+        if(abs(self.z_angular_velocity) >= 0.5):
+            if self.z_angular_velocity > 0:
+                motion = "ACW rotation"
+                led_numbers = [1,2,3,4,5,6,7,8,9,10]
+                self.ledpattern_number = "1009"
+            else:
+                motion = "CW rotation"
+                led_numbers = [1,2,3,4,5,6,7,8,9,10]
+                self.ledpattern_number = "1008"
         else:
-        	if (self.y_linear_velocity ==0 and self.x_linear_velocity==0):
-        	    if(self.prev_dock_status!=self.docking and self.docking == 1):
-        	        self.prev_dock_status = self.docking
-        	        led_numbers = [1,2,3,4,5,6,7,8,9,10]
-        	        motion = "Dockin"
-        	    else:
-        	        led_numbers = []
-        	        motion = "None"
-        	elif (angle_in_degree<30 and angle_in_degree>-30.0):
-        	    led_numbers = [1, 2, 10, 9]
-        	    motion = "straight"
-        	elif (angle_in_degree<=60.0 and angle_in_degree>=30.0):
-        	    led_numbers = [1, 2, 3]
-        	    motion = "TopLeft Diagonal"
-        	elif (angle_in_degree>60.0 and angle_in_degree<120.0):
-        	    led_numbers = [1, 2, 3, 4, 5]
-        	    motion = "Left"
-        	elif (angle_in_degree>=120.0 and angle_in_degree<=150.0):
-        	    led_numbers = [3, 4, 5]
-        	    motion = "BottomLeft Diagonal"
-        	elif ((angle_in_degree>150.0 and angle_in_degree<=180.0) or (angle_in_degree<-150.0 and angle_in_degree>=-180.0) ):
-        	    led_numbers = [4, 5, 6, 7]
-        	    motion = "Reverse"
-        	elif (angle_in_degree>=-150 and angle_in_degree<=-120.0):
-        	    led_numbers = [6, 7, 8]
-        	    motion = "BottomRight Diagonal"
-        	elif (angle_in_degree>-120.0 and angle_in_degree<-60):
-        	    led_numbers = [6, 7, 8, 9, 10]
-        	    motion = "Right"
-        	elif (angle_in_degree>=-60.0 and angle_in_degree<=-30.0):
-        	    led_numbers = [ 8, 9, 10]
-        	    motion = "TopRight Diagonal"
+            rospy.loginfo("dock_State = {}".format(self.docking_state))
+            if self.docking_state in range(1,6):
+                motion = "docking"
+                led_numbers = [1,2,3,4,5,6,7,8,9,10]
+                self.ledpattern_number = "1020"
+                rospy.loginfo("inside dock_State")
+            elif self.docking_state==12:
+                motion = "undocking"
+                led_numbers = [1,2,3,4,5,6,7,8,9,10]
+                self.ledpattern_number = "1020"
+                rospy.loginfo("inside dock_State")
+            else:
+                if(self.y_linear_velocity ==0 and self.x_linear_velocity==0):
+                    if(self.prev_dock_status!=self.docking and self.docking == 1):
+                        self.prev_dock_status = self.docking
+                        led_numbers = [1,2,3,4,5,6,7,8,9,10]
+                        self.ledpattern_number = "1020"
+                        motion = "Dockin"
+                    else:
+                        led_numbers = []
+                        motion = "None"
+                elif (angle_in_degree<30 and angle_in_degree>-30.0):
+                    led_numbers = [1, 2, 10, 9]
+                    self.ledpattern_number = "1020"
+                    motion = "straight"
+                elif (angle_in_degree<=60.0 and angle_in_degree>=30.0):
+                    led_numbers = [1, 2, 3]
+                    self.ledpattern_number = "1020"
+                    motion = "TopLeft Diagonal"
+                elif (angle_in_degree>60.0 and angle_in_degree<120.0):
+                    led_numbers = [1, 2, 3, 4, 5]
+                    self.ledpattern_number = "1020"
+                    motion = "Left"
+                elif (angle_in_degree>=120.0 and angle_in_degree<=150.0):
+                    led_numbers = [3, 4, 5]
+                    self.ledpattern_number = "1020"
+                    motion = "BottomLeft Diagonal"
+                elif ((angle_in_degree>150.0 and angle_in_degree<=180.0) or (angle_in_degree<-150.0 and angle_in_degree>=-180.0) ):
+                    led_numbers = [4, 5, 6, 7]
+                    self.ledpattern_number = "1020"
+                    motion = "Reverse"
+                elif (angle_in_degree>=-150 and angle_in_degree<=-120.0):
+                    led_numbers = [6, 7, 8]
+                    self.ledpattern_number = "1020"
+                    motion = "BottomRight Diagonal"
+                elif (angle_in_degree>-120.0 and angle_in_degree<-60):
+                    led_numbers = [6, 7, 8, 9, 10]
+                    self.ledpattern_number = "1020"
+                    motion = "Right"
+                elif (angle_in_degree>=-60.0 and angle_in_degree<=-30.0):
+                    led_numbers = [ 8, 9, 10]
+                    self.ledpattern_number = "1020"
+                    motion = "TopRight Diagonal"
         return motion, led_numbers
 
 
@@ -164,6 +179,11 @@ class MotionIdentification(object):
 
 
     def create_framework(self, led_number, led_colour):
+        """
+        from received LED colour and LED number, create string message framework to
+	be sent to arduino
+
+        """
         led_number_in_hex = 0
         rospy.loginfo("led_number debug = "+str(led_number))
         if (len(led_number)==0):
@@ -185,7 +205,8 @@ class MotionIdentification(object):
         else:
             self.led_colour = "00FF00"
         message_framework = self.header+self.led_frame+self.led_numbers_hex+\
-        ":"+self.led_colour+self.ledpattern_frame+self.buzzer_frame+self.end_of_frame
+        ":"+self.led_colour+self.ledpattern_frame+self.ledpattern_number\
+        +self.buzzer_frame+self.end_of_frame
         return message_framework
 
     def send_framework(self, msg_framework):
@@ -219,5 +240,8 @@ if __name__ == '__main__':
     rospy.init_node('cmd_vel_listener')
     identify_motion = MotionIdentification()
     identify_motion.start()
+<<<<<<< HEAD
     # msg = identify_motion.create_framework([0,1,2,3],"FF0000")
     # print(msg)
+=======
+>>>>>>> f7e95d613e2bcc2abba481d95b2d1d0dabd0bb64
