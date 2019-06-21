@@ -1,4 +1,0 @@
-string query_id
-bool query_success
-uint16 elevator_id
-string elevator_waypoint

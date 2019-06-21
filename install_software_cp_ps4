@@ -1,0 +1,146 @@
+#!/bin/bash
+
+mkdir -p ~/workspace_SPD_intention_comm
+cd ~/workspace_SPD_intention_comm
+mkdir -p ~/workspace_SPD_intention_comm/src
+cd  ~/workspace_SPD_intention_comm/src
+git clone https://git.ropod.org/eduardocd/ropod_teleop.git
+git clone https://git.ropod.org/ropod/communication/ropod_ros_msgs.git
+
+# cd ~/workspace
+# wget https://raw.githubusercontent.com/blumenthal/ropod-base-cpp/master/install_deps.sh
+# chmod 755 install_deps.sh
+# sudo ./install_deps.sh --workspace-path=/opt --install-path=/usr/local
+#
+# cd ~/workspace
+# git clone https://github.com/ropod-project/pyre.git
+# cd pyre && sudo python setup.py install
+#
+#
+# cd ~/workspace
+# git clone https://github.com/ropod-project/pyzmq.git
+# cd pyzmq && sudo python setup.py install
+#
+#
+# ### ROS kinetic
+# sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+# sudo apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
+# sudo apt update
+# sudo apt install ros-kinetic-desktop-full ros-kinetic-sbpl libsuitesparse-dev ros-kinetic-libg2o ros-kinetic-costmap-2d ros-kinetic-nav-core ros-kinetic-costmap-converter ros-kinetic-move-base-msgs ros-kinetic-laser-proc ros-kinetic-urg-c ros-kinetic-joy ros-kinetic-amcl ros-kinetic-map-server ros-kinetic-sick-tim python-catkin-tools python-wstool
+#
+#
+# ## MongoCXX driver
+# ## Instructions adapted from here: http://mongocxx.org/mongocxx-v3/installation/
+# # libmongoc
+# cd ~/workspace
+# wget https://github.com/mongodb/mongo-c-driver/releases/download/1.13.0/mongo-c-driver-1.13.0.tar.gz
+# tar xzf mongo-c-driver-1.13.0.tar.gz
+# cd mongo-c-driver-1.13.0
+# mkdir cmake-build && cd cmake-build
+# cmake -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF ..
+# make
+# sudo make install
+#
+# # mongocxx
+# cd ~/workspace
+# curl -OL https://github.com/mongodb/mongo-cxx-driver/archive/r3.4.0.tar.gz
+# tar -xzf r3.4.0.tar.gz
+# cd mongo-cxx-driver-r3.4.0/build
+# cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local ..
+# sudo make EP_mnmlstc_core
+# make && sudo make install
+#
+# ### Catkin workspace
+# cd ~
+# mkdir -p ropod-project-software/catkin_workspace/src
+# cd ropod-project-software/catkin_workspace/src
+# git clone https://github.com/ropod-project/tree-ropod.git ./
+# wstool init
+# wstool up
+# echo "source ~/ropod-project-software/catkin_workspace/src/platform/ropod_tue_1_bringup/setup.bash"  >> ~/.bashrc
+#
+# ### ropod_common
+# sudo mkdir -p /opt/ropod
+# cd ~/workspace
+# git clone -b develop https://github.com/ropod-project/ropod_common.git
+# sudo mv ropod_common /opt/ropod/
+#
+# git clone https://github.com/ropod-project/ftsm.git
+# sudo mv ftsm /opt/ropod/
+#
+# git clone https://github.com/ropod-project/zyre_base.git
+# sudo mv zyre_base /opt/ropod/
+#
+# ### Execution monitoring
+# mkdir -p ~/ropod-project-software/catkin_workspace/src/platform
+# cd ~/ropod-project-software/catkin_workspace/src/platform
+# git clone -b develop git@git.ropod.org:ropod/execution-monitoring/component-monitoring.git
+# cd component-monitoring
+# sudo python setup.py develop
+# ./init_robot_store_inteface.py
+#
+# cd ../
+# git clone git@git.ropod.org:ropod/execution-monitoring/fault-recovery.git
+# cd fault-recovery
+# sudo python setup.py develop
+#
+# cd ../
+# git clone -b ropod_002_fw_1011 git@git.ropod.org:ropod/execution-monitoring/smart_wheel_ethercat_parser.git
+#
+# ## Install libtins (for ethercat parser)
+# cd ~/workspace
+# git clone https://github.com/mfontanini/libtins.git
+# cd libtins && mkdir build && cd build
+# cmake ../ -DLIBTINS_ENABLE_CXX11=1 && make
+# sudo make install
+#
+#
+# ### permission for laser scanner
+# sudo usermod -a -G dialout $USER
+#
+# ### environment settings
+# mkdir -p ~/.ropod
+# echo "export ROS_IP=" >> ~/.ropod/env.sh
+# echo "export ZSYS_INTERFACE=" >> ~/.ropod/env.sh
+#
+#
+# ## Docker
+# sudo apt-get install \
+#     apt-transport-https \
+#     ca-certificates \
+#     curl \
+#     gnupg-agent \
+#     software-properties-common
+# curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+# sudo add-apt-repository \
+#    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+#    $(lsb_release -cs) \
+#    stable"
+#
+# sudo apt update
+# sudo apt-get install docker-ce docker-ce-cli containerd.io
+#
+# ## allow user to run docker without sudo
+# sudo usermod -aG docker $USER
+#
+# ## OSM bridge
+# cd ~/ropod-project-software/catkin_workspace/src/functionalities/osm_bridge/
+# sudo pip3 install -e .
+#
+# ## Overpass Docker container
+# cd ~/ropod-project-software/catkin_workspace/src/applications/docker-overpass-api
+# bash update_overpass.sh
+#
+# ### Systemd services
+# cd ~/workspace
+# git clone git@git.ropod.org:ropod/automatic-startup.git
+# cd automatic-startup
+# sudo ./setup_services.bash robot
+#
+#
+# ### Catkin build
+# source ~/ropod-project-software/catkin_workspace/src/platform/ropod_tue_1_bringup/setup.bash
+# rosdep update
+# rosdep install --from-path . -i -y
+# cd ~/ropod-project-software/catkin_workspace
+# catkin build
