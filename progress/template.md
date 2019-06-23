@@ -68,4 +68,7 @@ Eduardo Cervantes
 
 * Rospy update rate was updates, previosly it has a problem when the rate hass above 1Hz now after the error was identified the library was modified to support a higher rate.
 * The detected angles now are at diagonals also, improving the ability of the robot to comunicate his intentions. 
-* 
+
+Date: 24.06.2019
+* The connection with the external hardware was modified to allign with a more proper way to communicat with external hardware, udev rules are now used, an installer script is provided to add proper udev rule.
+* Now the dependencies are installed automatically through the use of an installer located in the source folder of the repository.
