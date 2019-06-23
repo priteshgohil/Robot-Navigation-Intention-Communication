@@ -75,6 +75,11 @@ class MotionIdentification(object):
         Obtains internal status while docking.
         """
         self.docking_state = msg.docking_status
+        # nowisastring=format(msg)
+        # docking_string= nowisastring.split('\n\r')[0]
+	    # docking_string= docking_string.split(': ')[1]
+        # rospy.loginfo("Received docking command:  "+docking_string)
+        # self.docking_state=int(docking_string)
 
     def update_cmd_vel_message(self, msg):
         """
@@ -235,3 +240,8 @@ if __name__ == '__main__':
     rospy.init_node('cmd_vel_listener')
     identify_motion = MotionIdentification()
     identify_motion.start()
+<<<<<<< HEAD
+    # msg = identify_motion.create_framework([0,1,2,3],"FF0000")
+    # print(msg)
+=======
+>>>>>>> f7e95d613e2bcc2abba481d95b2d1d0dabd0bb64

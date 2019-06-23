@@ -1,0 +1,22 @@
+#!/bin/bash
+
+rm -rf ~/workspace_SPD_intention_comm
+mkdir -p ~/workspace_SPD_intention_comm
+cd ~/workspace_SPD_intention_comm
+mkdir -p ~/workspace_SPD_intention_comm/src
+cd  ~/workspace_SPD_intention_comm/src
+git clone https://git.ropod.org/eduardocd/ropod_teleop.git
+git clone https://git.ropod.org/ropod/communication/ropod_ros_msgs.git
+git clone -b Eduardo https://github.com/HBRS-SDP/sdp_ss2019_P6_IntentionComm.git
+cd  ~/workspace_SPD_intention_comm/src/sdp_ss2019_P6_IntentionComm
+rm -rf ~/workspace_SPD_intention_comm/src/sdp_ss2019_P6_IntentionComm/progress
+rm -rf ~/workspace_SPD_intention_comm/src/sdp_ss2019_P6_IntentionComm/documents
+sudo mv ~/workspace_SPD_intention_comm/src/sdp_ss2019_P6_IntentionComm/utilities/60-circuitplayground.rules /etc/udev/rules.d/
+
+# ### Catkin build
+catkin make
+source ~/workspace_SPD_intention_comm/devel/setup.bash
+# rosdep update
+# rosdep install --from-path . -i -y
+cd ~/workspace_SPD_intention_comm
+catkin build

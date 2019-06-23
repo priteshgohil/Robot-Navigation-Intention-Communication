@@ -1,2 +1,0 @@
-float64 start_time
-float64 estimated_end_time

@@ -21,9 +21,9 @@ class SerialInterface:
 
     """
     def open_port(self):
-        command=os.popen("python -m serial.tools.list_ports pid=239A").read()
-        port_i=command.replace(" ","")
-        port=port_i.replace("\n","")
+        command=os.popen("ls -l /dev/Circuit_Playground").read()
+        port="/dev/"+command[command.find('>')+2:].replace("\n","")
+
         #Opening of the serial port
         try:
             self.arduino = serial.Serial(port,self.baud,timeout=self.timeout)
@@ -38,3 +38,7 @@ class SerialInterface:
         print("sending cmd")
         self.arduino.flushInput()
         self.arduino.write(message_to_send.encode())
+
+uno=SerialInterface(9600,1,"239A")
+uno.open_port()
+
