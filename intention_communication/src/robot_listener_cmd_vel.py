@@ -240,8 +240,3 @@ if __name__ == '__main__':
     rospy.init_node('cmd_vel_listener')
     identify_motion = MotionIdentification()
     identify_motion.start()
-<<<<<<< HEAD
-    # msg = identify_motion.create_framework([0,1,2,3],"FF0000")
-    # print(msg)
-=======
->>>>>>> f7e95d613e2bcc2abba481d95b2d1d0dabd0bb64
