@@ -64,6 +64,14 @@ Next task:
 
 Date: 17.06.2019
 
+Priteshkumar Gohil
+* Together with Eduardo, we added missing rotation intention in the program. So now we are able to detect whenever robot is rotating.
+* We did little play around with buzzer and come up with idea which we try to implement in the next week.
+
+Next task:
+* Try your planned logic for sound and see if it works.
+* Make final presentation of your project.
+
 Eduardo Cervantes
 
 * Rospy update rate was updates, previosly it has a problem when the rate hass above 1Hz now after the error was identified the library was modified to support a higher rate.
