@@ -1,5 +1,5 @@
-# sdp_ss2019_P6_IntentionComm
-Repository containing the install executable file with the structure of the whole software. Specifically for the project Intention Communication
+# Robot Navigation Intention Communication
+To visualize the movement and special actions of the ROPOD (RObotic POD). This project can easily be modifed for another robot.
 
 ## Install
 
@@ -8,6 +8,7 @@ Installation of dependencies:
 - ropod_teleop
 - ropod_ros_msgs
 - ./install_software_cp_ps4
+Note: install_software_cp_ps4 script is written for this specific project and specific robot. 
 
 This command will install the proper dependencies and will create a folder in your home folder ~/workspace_SPD_intention_comm
 in such folder the required packages will be builded.
@@ -31,3 +32,13 @@ As a final step under the folder /utilities it is available a script to connect 
 ```
 cd /utilities && ./Connect_to_ps4_joypad
 ```
+
+## Project Overview
+![overview image](documents/images/Overview.png)
+
+## Demo
+
+
+## Authors
+* Pritesh Gohil [@priteshgohil](https://github.com/priteshgohil)
+* Eduardo Cervantes [@eduardcd](https://github.com/eduardcd)
