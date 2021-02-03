@@ -1,5 +1,11 @@
 # Robot Navigation Intention Communication
-To visualize the movement and special actions of the ROPOD (RObotic POD). This project can easily be modifed for another robot.
+To visualize the movement and special actions of the ROPOD (RObotic POD). This project can easily be modifed for another robot. We use Adafruit classic playground board for this project. It is integrated with the ROBOT's OS using USB. Robot's navigation is sent to the Adafruite arduino board using serial communication (UART). Protocol design and detailed document can be found [presentation](documents/SDP_presentation.pdf) or in [docs](intention_communication/docs/).
+
+## Project Directories
+- [documents/](documents): Kickoff and final presentation of this project
+- [intention_communication/](intention_communication/): ROS package that listens to robot's velocity topic, create message framework for Adafruit board and send message to Adafruite board using serial communication. 
+- [progress/](progress/): Weekly progress report
+- [utilities/](utilities/): Arduino C language code to parse the received message and display action. 
 
 ## Install
 
@@ -34,9 +40,14 @@ cd /utilities && ./Connect_to_ps4_joypad
 ```
 
 ## Project Overview
-![overview image](documents/images/Overview.png)
+<img src="https://github.com/priteshgohil/Robot-Navigation-Intention-Communication/blob/master/documents/Images/Overview.png" alt="Overview" width="600">
+<img src="https://github.com/priteshgohil/Robot-Navigation-Intention-Communication/blob/master/documents/Images/Motion_identificatoin.png" alt="Motion Identificatoin" width="600">
 
 ## Demo
+The robot is moving in a 2D plane therefore only x and y coordinates are considered. ROS velocity topic of the robot is subscribed and the navigation direction is calculated for LEDs in Adafruit Board.
+
+<img src="https://github.com/priteshgohil/Robot-Navigation-Intention-Communication/blob/master/documents/Images/Motion1.png" alt="Intention Display1" width="600">
+<img src="https://github.com/priteshgohil/Robot-Navigation-Intention-Communication/blob/master/documents/Images/Motion2.png" alt="Intention Display2" width="600">
 
 
 ## Authors
